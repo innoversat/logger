@@ -20,7 +20,7 @@ Advanced, customizable, TypeScript-based logging library. Designed for both Node
 ## Installation
 
 ```bash
-npm install innoversat-logger
+pnpm install @innoversat/logger # or npm install @innoversat/logger or yarn install @innoversat/logger
 ```
 
 ## Basic Usage
@@ -28,21 +28,21 @@ npm install innoversat-logger
 ### Node.js
 
 ```typescript
-import { Logger, LogLevel } from 'innoversat-logger';
+import { Logger, LogLevel } from "@innoversat/logger";
 
 // Basic logger example
 const logger = new Logger({
   level: LogLevel.DEBUG,
   useColor: true,
-  includeTimestamp: true
+  includeTimestamp: true,
 });
 
 // Using different log levels
-logger.debug('Debug message');
-logger.info('Information message');
-logger.warn('Warning message');
-logger.error('Error occurred', { error: new Error('Something went wrong') });
-logger.fatal('Critical error', { service: 'database' });
+logger.debug("Debug message");
+logger.info("Information message");
+logger.warn("Warning message");
+logger.error("Error occurred", { error: new Error("Something went wrong") });
+logger.fatal("Critical error", { service: "database" });
 
 // Close the logger when finished
 logger.close();
@@ -51,17 +51,18 @@ logger.close();
 ### React
 
 ```tsx
-import React from 'react';
-import { LogLevel } from 'innoversat-logger';
-import { LoggerProvider, useLogger } from 'innoversat-logger';
+import React from "react";
+import { LogLevel, LoggerProvider, useLogger } from "@innoversat/logger";
 
 // Wrap application with LoggerProvider
 const App = () => {
   return (
-    <LoggerProvider options={{ 
-      level: LogLevel.DEBUG,
-      environment: process.env.NODE_ENV === 'production' ? 'production' : 'development'
-    }}>
+    <LoggerProvider
+      options={{
+        level: LogLevel.DEBUG,
+        environment: process.env.NODE_ENV === "production" ? "production" : "development",
+      }}
+    >
       <YourApp />
     </LoggerProvider>
   );
@@ -70,12 +71,12 @@ const App = () => {
 // Using logger with hooks
 const MyComponent = () => {
   const logger = useLogger();
-  
+
   useEffect(() => {
-    logger.info('Component loaded');
-    return () => logger.debug('Component removed');
+    logger.info("Component loaded");
+    return () => logger.debug("Component removed");
   }, [logger]);
-  
+
   return <div>My Component</div>;
 };
 ```
@@ -93,40 +94,34 @@ Logger uses an extensible transport system that allows you to send logs to diffe
 ### Custom Transport Usage
 
 ```typescript
-import { 
-  Logger, 
-  LogLevel, 
-  ConsoleTransport, 
-  FileTransport, 
-  HttpTransport 
-} from 'innoversat-logger';
+import { Logger, LogLevel, ConsoleTransport, FileTransport, HttpTransport } from "@innoversat/logger";
 
 // Configure transports
 const consoleTransport = new ConsoleTransport({
   level: LogLevel.DEBUG,
-  useColor: true
+  useColor: true,
 });
 
 const fileTransport = new FileTransport({
   level: LogLevel.INFO,
-  dirname: './logs',
-  filename: 'app',
+  dirname: "./logs",
+  filename: "app",
   maxSize: 10 * 1024 * 1024, // 10MB
-  maxFiles: 5
+  maxFiles: 5,
 });
 
 const httpTransport = new HttpTransport({
-  url: 'https://logs.myapi.com/collect',
+  url: "https://logs.myapi.com/collect",
   level: LogLevel.ERROR,
   headers: {
-    'Authorization': 'Bearer token123'
+    Authorization: "Bearer token123",
   },
-  batchSize: 10
+  batchSize: 10,
 });
 
 // Create a logger using all transports
 const logger = new Logger({
-  transports: [consoleTransport, fileTransport, httpTransport]
+  transports: [consoleTransport, fileTransport, httpTransport],
 });
 ```
 
@@ -135,27 +130,22 @@ const logger = new Logger({
 You can customize how logs are formatted.
 
 ```typescript
-import { 
-  ConsoleTransport, 
-  jsonFormat, 
-  csvFormat, 
-  templateFormat 
-} from 'innoversat-logger';
+import { ConsoleTransport, jsonFormat, csvFormat, templateFormat } from "@innoversat/logger";
 
 // JSON format
 const jsonConsole = new ConsoleTransport({
-  format: jsonFormat
+  format: jsonFormat,
 });
 
 // CSV format
 const csvFile = new FileTransport({
   format: csvFormat,
-  filename: 'logs.csv'
+  filename: "logs.csv",
 });
 
 // Template format
 const templateConsole = new ConsoleTransport({
-  format: templateFormat('[{timestamp}] | {level} | {message}')
+  format: templateFormat("[{timestamp}] | {level} | {message}"),
 });
 ```
 
@@ -167,7 +157,7 @@ You can use asynchronous logging for high performance.
 const logger = new Logger({
   async: true,
   asyncInterval: 2000, // Batch processing every 2 seconds
-  level: LogLevel.DEBUG
+  level: LogLevel.DEBUG,
 });
 
 // Make sure all queued logs are processed when closing the logger
@@ -177,12 +167,12 @@ await logger.close();
 ## React Hooks and Components
 
 ```tsx
-import { LoggerProvider, useLogger, useTransport } from 'innoversat-logger';
+import { LoggerProvider, useLogger, useTransport } from '@innoversat/logger';
 
 // Hook that logs user actions automatically
 function useActionLogger() {
   const logger = useLogger();
-  
+
   return useCallback((action, data) => {
     logger.info(`User action: ${action}`, {
       action,
@@ -195,13 +185,13 @@ function useActionLogger() {
 // Hook to add transports
 function MyLoggingComponent() {
   const addTransport = useTransport();
-  
+
   useEffect(() => {
     // Add a custom transport
     const myTransport = new ConsoleTransport({...});
     addTransport(myTransport);
   }, [addTransport]);
-  
+
   return <div>Logging Component</div>;
 }
 ```
@@ -210,52 +200,52 @@ function MyLoggingComponent() {
 
 Logger accepts the following options:
 
-| Option | Type | Default | Description |
-|---------|-----|------------|----------|
-| level | LogLevel | LogLevel.DEBUG | Minimum log level |
-| useColor | boolean | true | Use color in terminal output |
-| includeTimestamp | boolean | true | Add timestamp |
-| includeStackTrace | boolean | false | Add stack trace in error/fatal logs |
-| environment | string | 'development' | Environment ('development' or 'production') |
-| logToFile | boolean | false | Save logs to file |
-| logFilePath | string | './logs' | Log files directory |
-| async | boolean | false | Use asynchronous logging |
-| asyncInterval | number | 1000 | Asynchronous batch interval (ms) |
-| transports | Transport[] | [] | Array of transports |
-| format | Function | | Custom formatting function |
+| Option            | Type        | Default        | Description                                 |
+| ----------------- | ----------- | -------------- | ------------------------------------------- |
+| level             | LogLevel    | LogLevel.DEBUG | Minimum log level                           |
+| useColor          | boolean     | true           | Use color in terminal output                |
+| includeTimestamp  | boolean     | true           | Add timestamp                               |
+| includeStackTrace | boolean     | false          | Add stack trace in error/fatal logs         |
+| environment       | string      | 'development'  | Environment ('development' or 'production') |
+| logToFile         | boolean     | false          | Save logs to file                           |
+| logFilePath       | string      | './logs'       | Log files directory                         |
+| async             | boolean     | false          | Use asynchronous logging                    |
+| asyncInterval     | number      | 1000           | Asynchronous batch interval (ms)            |
+| transports        | Transport[] | []             | Array of transports                         |
+| format            | Function    |                | Custom formatting function                  |
 
 ## Transport Options
 
 ### ConsoleTransport
 
-| Option | Type | Description |
-|---------|-----|----------|
-| level | LogLevel | Minimum log level |
-| useColor | boolean | Use coloring |
-| colorize | object | Color mapping |
-| format | Function | Formatting function |
+| Option   | Type     | Description         |
+| -------- | -------- | ------------------- |
+| level    | LogLevel | Minimum log level   |
+| useColor | boolean  | Use coloring        |
+| colorize | object   | Color mapping       |
+| format   | Function | Formatting function |
 
 ### FileTransport
 
-| Option | Type | Description |
-|---------|-----|----------|
-| level | LogLevel | Minimum log level |
-| dirname | string | Log directory |
-| filename | string | File name |
-| extension | string | File extension |
-| maxSize | number | Maximum file size (bytes) |
-| maxFiles | number | Maximum number of files |
-| format | Function | Formatting function |
+| Option    | Type     | Description               |
+| --------- | -------- | ------------------------- |
+| level     | LogLevel | Minimum log level         |
+| dirname   | string   | Log directory             |
+| filename  | string   | File name                 |
+| extension | string   | File extension            |
+| maxSize   | number   | Maximum file size (bytes) |
+| maxFiles  | number   | Maximum number of files   |
+| format    | Function | Formatting function       |
 
 ### HttpTransport
 
-| Option | Type | Description |
-|---------|-----|----------|
-| url | string | Target URL |
-| level | LogLevel | Minimum log level |
-| method | string | HTTP method (POST/PUT) |
-| headers | object | HTTP headers |
-| batchSize | number | Logs per batch |
-| timeoutMs | number | Batch sending interval |
-| maxRetries | number | Maximum retry count |
-| format | Function | Formatting function |
+| Option     | Type     | Description            |
+| ---------- | -------- | ---------------------- |
+| url        | string   | Target URL             |
+| level      | LogLevel | Minimum log level      |
+| method     | string   | HTTP method (POST/PUT) |
+| headers    | object   | HTTP headers           |
+| batchSize  | number   | Logs per batch         |
+| timeoutMs  | number   | Batch sending interval |
+| maxRetries | number   | Maximum retry count    |
+| format     | Function | Formatting function    |
