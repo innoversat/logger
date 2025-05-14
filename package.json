@@ -1,6 +1,14 @@
 {
   "name": "@innoversat/logger",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "bugs": {
+    "url": "https://github.com/innoversat/logger#issues",
+    "email": "innoversat@innoversat.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/innoversat/logger"
+  },
   "license": "MIT",
   "author": {
     "name": "Innoversat",
