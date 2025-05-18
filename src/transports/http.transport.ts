@@ -135,9 +135,16 @@ export class HttpTransport extends BaseTransport {
   private async sendBatch(): Promise<void> {
     if (this.logQueue.length === 0) return;
     
-    // Get logs from queue and clear the queue
-    const batch = [...this.logQueue];
+    // Filter out any entries that don't match the minimum level
+    // This is a safeguard in case the log level changed after entries were queued
+    const batch = this.logQueue.filter(entry => this.shouldLog(entry.level));
     this.logQueue = [];
+    
+    if (batch.length === 0) {
+      // No logs to send after filtering
+      this.scheduleBatch();
+      return;
+    }
     
     try {
       const response = await fetch(this.options.url, {

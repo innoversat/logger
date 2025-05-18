@@ -29,7 +29,14 @@
     "prepare": "npm run build",
     "start:advanced-example": "ts-node src/examples/advanced-example.ts",
     "start:node-example": "ts-node src/examples/node-example.ts",
-    "test": "jest"
+    "start:all-examples": "npm run start:node-example && npm run start:advanced-example",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:formats": "jest formats",
+    "test:transports": "jest transports",
+    "test:logger": "jest logger",
+    "test:coverage": "jest --coverage --coverageReporters=\"text-summary\" --coverageReporters=\"lcov\"",
+    "test:ci": "jest --ci --coverage"
   },
   "dependencies": {
     "colors": "^1.4.0",
