@@ -248,4 +248,56 @@ Logger accepts the following options:
 | batchSize  | number   | Logs per batch         |
 | timeoutMs  | number   | Batch sending interval |
 | maxRetries | number   | Maximum retry count    |
-| format     | Function | Formatting function    |
+
+## Development and Testing
+
+### Running Examples
+
+The package comes with two example implementations that demonstrate different features:
+
+```bash
+# Run the basic Node.js example
+npm run start:node-example
+
+# Run the advanced example with custom transports
+npm run start:advanced-example
+
+# Run both examples sequentially
+npm run start:all-examples
+```
+
+### Testing
+
+The project uses Jest for testing. To run tests:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode during development
+npm run test:watch
+
+# Run tests for specific components
+npm run test:formats
+npm run test:transports
+npm run test:logger
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### Building
+
+To build the package:
+
+```bash
+# Clean and build
+npm run build
+
+# Just clean without building
+npm run clean
+```
+
+## License
+
+MIT

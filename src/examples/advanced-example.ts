@@ -39,7 +39,7 @@ async function runAdvancedExample() {
     colorize: true,
     showTimestamp: true,
     showLevel: true,
-    format: 'simple' // Specifying "simple" but we'll use our own format
+    format: 'simple'
   });
   
   // Adding our own formatting function to the transport (monkey patching)
@@ -100,6 +100,15 @@ async function runAdvancedExample() {
     batchLogs: true,
     batchSize: 10
   });
+  
+  // Modify the HTTP transport to suppress error messages (because we're using a fake URL)
+  const originalSendBatch = httpTransport['sendBatch'];
+  httpTransport['sendBatch'] = async function() {
+    // In a real application, you would not modify this function
+    // This is just to prevent error messages in the example
+    console.log('Note: HTTP transport is configured with a fake URL. In a real application, use a valid API endpoint.');
+    return Promise.resolve();
+  };
   
   // Add all transports to the logger
   logger.addTransport(consoleTransport);
